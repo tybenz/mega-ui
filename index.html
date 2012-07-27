@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<link rel="stylesheet" type="text/css" href="css/styles.css" />
+
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/webpro/"></script>
+</head>
+<body>
+
+    <a class="round button">Normal</a>
+    
+    <a class="round grey button">Grey</a>
+    
+    <a class="round small button">Small</a>
+
+    <div class="slider">
+        <div class="slider-track">
+            <div class="slider-handle"></div>
+        </div>
+    </div>
+    <input type="text" class="round">
+    
+    <div class="number round">
+        <div class="buttons">
+            <div class="up-button round-tl grey small button"></div>
+            <div class="down-button round-bl grey small button"></div>
+        </div>
+        <input type="text" value="0" class="numeric-input">
+        <input type="text" class="round-r unit" value="px">
+    </div>
+    
+    <div class="select">
+        <select id="select" name="select">
+            <option value="0">Option 1</option>
+            <option value="1">Option 2</option>
+            <option value="2">Option 3</option>
+        </select>
+        <div class="clearfix select-box">
+            <input type="text" class="textbox round-l input" value="Myriad Pro, Arial, sans-serif">
+            <div class="button grey round-r"></div>
+        </div>
+        <div class="options round-b">
+            <div class="option textbox round-t" data-value="0"><div class="option-inner">Myriad Pro, Arial, sans-serif</div></div>
+            <div class="option textbox round-t" data-value="1"><div class="option-inner">Monaco, sans-serif, monospace</div></div>
+            <div class="option textbox" data-value="2"><div class="option-inner">Helvetica, Arial, sans-serif</div></div>
+            <div class="option textbox round-b" data-value="3"><div class="option-inner">Times New Roman, serif</div></div>
+        </div>
+    </div>
+    
+
+</body>
+<script type="text/javascript">
+    var combobox = new WebPro.Widget.ComboBox( ".select", {
+		inputClassName: "input",
+		optionsGroupClassName: "options",
+		optionClassName: "option",
+		buttonClassName: "button",
+		openClassName: "open"
+    });
+    
+    var numeric = new WebPro.Widget.NumericInput( ".number", {
+        buttonWrapperClassName: "buttons",
+		upButtonClassName: "up-button",
+		downButtonClassName: "down-button",
+		inputClassName: "numeric-input"
+    });
+    
+    var slider = new WebPro.Widget.Slider( ".slider", {
+        trackClassName: "slider-track",
+        thumbClassName: "slider-handle"
+    });
+</script>
+</html>
