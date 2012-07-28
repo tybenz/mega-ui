@@ -206,6 +206,7 @@ input, .textbox {
 	background-repeat: no-repeat;
 	background-position: 5px 11px, 0 0;
 	background-image: url(../img/arrow-down.png), -moz-linear-gradient(#61696F, #585e62);
+	background-image: url(../img/arrow-down.png), -webkit-linear-gradient(#61696F, #585e62);
 	border-bottom-color: #333;
 	border-right-color: #333;
 	border-left-color: #333;
