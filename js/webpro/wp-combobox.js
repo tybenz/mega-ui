@@ -38,10 +38,11 @@
 				self.$element.removeClass( self.openClassName );
 			});
 			
+			
+			
 			var count = 0;
 			
 			this.$input.on( "keyup", function( evt ) {
-				console.log(evt.which);
 				switch ( evt.which ) {
 					case 9:
 						//tab - handled by blur event

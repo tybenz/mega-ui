@@ -39,97 +39,133 @@ WebPro.widget( "Widget.Slider", WebPro.Widget, {
 
 	defaultOptions: {
 		trackClassName: 'wp-slider-track',
-		thumbClassName: 'wp-slider-thumb'
+		thumbClassName: 'wp-slider-thumb',
+		ignoreY: true,
+		ignoreX: false
 	},
 
 	_attachBehavior: function() {
 		var self = this,
 			opts = this.options;
-
+		
 		this.$track = this.$element.find( '.' + opts.trackClassName );
-		this.$thumb = this.$element.find( '.' + opts.thumbClassName );
+		this.$thumb = this.$element.find( '.' + opts.thumbClassName );	
 
-		var trackWidth = this.$track.width(),
-			thumbWidth = this.$track.width();
+		var trackWidth = Math.round( this.$track.width() ),
+			trackHeight = Math.round( this.$track.height() ),
+			thumbWidth = Math.round( this.$thumb.width() ),
+			thumbX = parseInt( this.$thumb.css( "left" ) ) || 0,
+			thumbY = parseInt( this.$thumb.css( "top" ) ) || 0,
+			thumbPercentX = thumbX / trackWidth,
+			thumbPercentY = thumbY / trackHeight;
 
-		this.percentage = 0; // % value in the range from zero to one.
-		this.position = 0; // px
+		this.percentage = { x: thumbPercentX, y: thumbPercentY };
+		this.position = { x: thumbX, y: thumbY };
 
-		this._resetConstraints();
+		this._setConstraints();
 
 		this.tracker = new  WebPro.DragTracker( this.$thumb[ 0 ], {
-				dragStart: function( dt, dx, dy ) { self._handleDragStart( dx, dy ); },
-				dragUpdate: function( dt, dx, dy ) { self._handleDragUpdate( dx, dy ); },
-				dragStop: function( dt, dx, dy ) { self._handleDragStop( dx, dy ); }
-			});
+			dragStart: function( dt, dx, dy ) { self._handleDragStart( dx, dy ); },
+			dragUpdate: function( dt, dx, dy ) { self._handleDragUpdate( dx, dy ); },
+			dragStop: function( dt, dx, dy ) { self._handleDragStop( dx, dy ); }
+		});
 	},
 
 	_handleDragStart: function( dx, dy ) {
-		this._startPos = this.position;
+		this._startPos = {
+			x: this.position.x,
+			y: this.position.y
+		};
 	},
 
 	_handleDragUpdate: function( dx, dy ) {
-		this.setPositionByPixel( this._startPos + dx );
+		if ( this.options.ignoreY ) {
+			this.setPositionByPixel( this._startPos.x + dx, this._startPos.y );
+		} else if ( this.options.ignoreX ) {
+			this.setPositionByPixel( this._startPos.x, this._startPos.y + dy );
+		} else {
+			this.setPositionByPixel( this._startPos.x + dx, this._startPos.y + dy );
+		}
 	},
 
 	_handleDragStop: function( dx, dy ) {
-		this._startPos = 0;
+		this._startPos = { x: 0, y: 0 };
 	},
 
-	_resetConstraints: function() {
+	_setConstraints: function( reset ) {
 		var trackWidth = this.$track.width(),
-			thumbWidth = this.$thumb.width();
+			trackHeight = this.$track.height(),
+			thumbWidth = this.$thumb.outerWidth(),
+			thumbHeight = this.$thumb.outerHeight();
 
-		this.maxPos = trackWidth - thumbWidth;
+		this.maxPos = {
+			x: trackWidth - thumbWidth,
+			y: trackHeight - thumbHeight
+		};
 
-		// Reset the thumb based on our new width.
-
-		this.setPositionByPixel( this.percentage * this.maxPos );
+		if ( reset ) {
+			// Reset the thumb based on our new width.
+			this.setPositionByPixel( this.percentage.x * this.maxPos.x, this.percentage.y * this.maxPos.y );
+		}
 	},
 
-	setPositionByPixel: function( pos )
+	setPositionByPixel: function( posX, posY )
 	{
 		// Clip the value we were given to our pixel range.
 
-		pos = Math.round( pos || 0 );
-		pos = pos < 0 ? 0 : ( pos > this.maxPos ? this.maxPos : pos );
+		posX = Math.round( posX || 0 );
+		posX = posX < 0 ? 0 : ( posX > this.maxPos.x ? this.maxPos.x : posX );
+		
+		posY = Math.round( posY || 0 );
+		posY = posY < 0 ? 0 : ( posY > this.maxPos.y ? this.maxPos.y : posY );
 
-		this._setThumbPosition( pos );
+		this._setThumbPosition( posX, posY );
 	},
 
-	setPositionByPercentage: function( percent ) {
-		this.percentage = percent < 0 ? 0 : ( percent < 1 ? percent : 1 );
-		this._setThumbPosition( Math.round( this.percentage * this.maxPos ) );
+	setPositionByPercentage: function( percentX, percentY ) {
+		this.percentage.x = percentX < 0 ? 0 : ( percentX < 1 ? percentX : 1 );
+		this.percentage.y = percentY < 0 ? 0 : ( percentY < 1 ? percentY : 1 );
+		this._setThumbPosition( Math.round( this.percentage.x * this.maxPos.x ), Math.round( this.percentage.y * this.maxPos.y ) );
 	},
 
-	_setThumbPosition: function( pos ) {
-		this.percentage = pos / this.maxPos;
-		this.position = pos;
+	_setThumbPosition: function( posX, posY ) {
+		this.position = {
+			x: posX,
+			y: posY
+		};
+		this.percentage = {
+			x: posX / this.maxPos.x,
+			y: posY / this.maxPos.y
+		};
 
-		this.$thumb.css( 'left', pos + 'px');
+		this.$thumb.css({
+			left: posX + 'px',
+			top: posY + 'px'
+		});
+		
 		this.update();
 	},
 
 	update: function() {
 		this._update();
-		this.trigger( 'wp-slider-update', { position: this.position, percentage: this.percentage } );
+		if ( this.options.ignoreY ) {
+			this.trigger( 'wp-slider-update', { position: this.position.x, percentage: this.percentage.x } );
+		} else if ( this.options.ignoreX ) {
+			this.trigger( 'wp-slider-update', { position: this.position.y, percentage: this.percentage.y } );
+		} else {
+		this.trigger( 'wp-slider-update', {
+				positionX: this.position.x,
+				positionY: this.position.y,
+				percentageX: this.percentage.x,
+				percentageY: this.percentage.y
+			});
+		}
 	},
 
 	_update: function() {
 		// Stub function to be used by derived class.
 	}
 });
-
-// Add a convenience method to the jQuery Collection prototype,
-// that applies our Slider behavior to all the elements in the collection.
-
-$.fn.wpSlider = function( options ) {
-	$( this ).each( function() {
-		$( this ).data( 'wpSlider', new WebPro.Widget.Slider( this, options ) );
-	});
-
-	return this;
-};
 
 })( jQuery, WebPro, window, document );
 

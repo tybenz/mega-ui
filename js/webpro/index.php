@@ -13,7 +13,8 @@ $files = array(
 	'wp-disclosure-widget-plugins.js',
 	'wp-slider.js',
 	'wp-numeric-input.js',
-	'wp-combobox.js'
+	'wp-combobox.js',
+	'wp-color-picker.js'
 );
 
 require_once('combine.php');

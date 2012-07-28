@@ -16,12 +16,12 @@
     
     <a class="round small button">Small</a>
 
-    <div class="slider">
-        <div class="slider-track">
-            <div class="slider-handle"></div>
+    <div class="slider round">
+        <div class="slider-track round">
+            <div class="slider-handle round"></div>
         </div>
     </div>
-    <input type="text" class="round">
+    <input type="text" class="round color">
     
     <div class="number round">
         <div class="buttons">
@@ -50,6 +50,22 @@
         </div>
     </div>
     
+    <input class="round color" value="#00ff00">
+    
+    <div id="colorpicker" class="round">
+        <div class="colorpicker-graph">
+            <div class="graph">
+                <div class="thumb"></div>
+            </div>
+            <div class="mask"></div>
+        </div>
+        <div class="colorpicker-hue">
+            <div class="hue">
+                <div class="thumb">
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 <script type="text/javascript">
@@ -71,6 +87,19 @@
     var slider = new WebPro.Widget.Slider( ".slider", {
         trackClassName: "slider-track",
         thumbClassName: "slider-handle"
+    });
+
+    var slider2D = new WebPro.Widget.Slider( ".slider2d", {
+        trackClassName: "slider2d-graph",
+        thumbClassName: "slider2d-thumb",
+        ignoreY: false
+    });
+    
+    var colorpicker = new WebPro.Widget.ColorPicker( "#colorpicker", {
+        inputClassName: "color",
+        graphClassName: "graph",
+        hueClassName: "hue",
+        offsetY: 33
     });
 </script>
 </html>
