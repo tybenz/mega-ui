@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/webpro/"></script>
+  <style type="text/css" media="all">
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+
+    .button {
+      background-image: -moz-linear-gradient(#4d93dd, #215a88);
+      background-image: -webkit-linear-gradient(#4d93dd, #215a88);
+      padding: 13px 23px;
+      color: white;
+      font-weight: bold;
+      text-shadow: 0px 1px 1px #444;
+      display: inline-block;
+      border-width: 1px;
+      border-style: solid;
+      border-color: #295C89;
+      border-top-color: #6ABAF8;
+      box-shadow: 0 0 0 1px #333, 0 1px 2px 1px #333;
+      margin: 10px 10px 0 0;
+      cursor: pointer;
+    }
+
+    .button.grey {
+      border-color: #aaa;
+      border-top-color: #aaa;
+      color: #222;
+      text-shadow: 0 1px 1px #fff;
+      background-image: -moz-linear-gradient(#eeeeee, #e5e5e5);
+      background-image: -webkit-linear-gradient(#eeeeee, #e5e5e5);
+    }
+
+    .button.small {
+      padding: 6px 10px;
+    }
+
+    .button:hover {
+      background-image: -moz-linear-gradient(#4E98E7, #2568A0);
+      background-image: -webkit-linear-gradient(#4E98E7, #2568A0);
+    }
+
+    .button.grey:hover {
+      background-image: -moz-linear-gradient(#f5f5f5, #f0f0f0);
+      background-image: -webkit-linear-gradient(#f5f5f5, #f0f0f0);
+    }
+
+    .button:active {
+      background-image: -moz-linear-gradient(#2568A0, #4E98E7);
+      background-image: -webkit-linear-gradient(#2568A0, #4E98E7);
+    }
+
+    .button.grey:active {
+      background-image: -moz-linear-gradient(#f9f9f9, #f5f5f5);
+      background-image: -webkit-linear-gradient(#f9f9f9, #f5f5f5);
+    }
+
+    .gutter, .slider, input, .textbox {
+      background-color: #f3f3f3;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.3);
+      border: 0;
+      border-bottom: 1px solid rgba(255,255,255,.3);
+    }
+
+    input, .textbox {
+      padding: 7px 10px;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 36px;
+      color: #222;
+      text-shadow: 0px 1px 1px #fff;
+    }
+
+    .slider {
+      margin: 10px 0;
+      width: 200px;
+      height: 18px;
+      overflow: hidden;
+      padding: 1px;
+    }
+
+    .slider-track {
+      position: relative;
+      height: 100%;
+    }
+
+    .slider-handle {
+      cursor: pointer;
+      display: block;
+      width: 33px;
+      height: 16px;
+      color: #000;
+      background-image: -moz-linear-gradient( #D6DBE3, #A0A6AA );
+      background-image: -webkit-linear-gradient( #D6DBE3, #A0A6AA );
+      border: 1px solid #7F8588;
+      border-top-color: #e4e7ea;
+      text-decoration: none;
+      position: absolute;
+    }
+
+    .slider-handle:after {
+      content: "...";
+      text-shadow: 0 1px 2px #fff;
+      color: #6e7274;
+      position: relative;
+      left: 10px;
+      top: -4px;
+    }
+
+    .number {
+      margin: 10px 0;
+      height: 32px;
+    }
+
+    .number .buttons {
+      float: left;
+    }
+
+    .number .buttons .button {
+      margin: 0;
+      display: block;
+      padding: 6px 15px 12px;
+      text-align: center;
+      line-height: 0.8em;
+      width: 12px;
+      height: 8px;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      box-shadow: none;
+    }
+
+    .number .up-button {
+    }
+
+    .number input {
+      width: 60px;
+      float: left;
+      padding: 7px;
+      margin: 0;
+    }
+
+    .number input:not(.unit) {
+      text-align: right;
+      width: 70px;
+    }
+
+    .number .unit {
+      margin-left: 2px;
+    }
+
+    .select {
+      overflow: hidden;
+      width: 195px;
+      height: 33px;
+      margin: 10px 0;
+      position: relative;
+    }
+
+    .select.open {
+      overflow: visible;
+    }
+
+    .select select {
+      display: none;
+    }
+
+    .select .select-box .textbox, .select .button {
+      float: left;
+      margin: 0;
+    }
+
+    .select .textbox {
+      width: 150px;
+    }
+
+    .select .button {
+      display: block;
+      padding: 11px 5px;
+      width: 12px;
+      height: 9px;
+      background-repeat: no-repeat;
+      background-position: 5px 11px, 0 0;
+      background-image: url(../img/arrow-down.png), -moz-linear-gradient(#61696F, #eeeeee);
+      background-image: url(../img/arrow-down.png), -webkit-linear-gradient(#61696F, #eeeeee);
+      border-bottom-color: #333;
+      border-right-color: #333;
+      border-left-color: #333;
+      box-shadow: none;
+    }
+
+    .select .button:hover {
+      background-image: url(../img/arrow-down.png), -moz-linear-gradient(#757F87, #656D72);
+      background-image: url(../img/arrow-down.png), -webkit-linear-gradient(#757F87, #656D72);
+    }
+
+    .select .button:active, .select.open .button {
+      background-image: url(../img/arrow-down.png), -moz-linear-gradient(#656D72, #757F87);
+      background-image: url(../img/arrow-down.png), -webkit-linear-gradient(#656D72, #757F87);
+    }
+
+    .select .options {
+      position: absolute;
+      top: 36px;
+      left: 0;
+      box-shadow: 0 0 3px 0 #57B3EA;
+      z-index: 10;
+    }
+
+    .select .options.filter .option {
+      display: none;
+    }
+
+    .select .options.filter .option.active {
+      display: block;
+    }
+
+    .select .option {
+      width: 172px;
+      border-bottom-color: #555;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .select .option .option-inner {
+      width: 400px;
+    }
+
+    .select .option:hover, .select .option.highlight {
+      background-color: #34373C;
+    }
+
+    #colorpicker {
+      width: 185px;
+      height: 150px;
+      padding: 10px;
+      background-color: #000;
+      z-index: 5;
+      position: absolute;
+      display: none;
+    }
+
+    #colorpicker .colorpicker-graph {
+      height: 150px;
+      width: 150px;
+      float: left;
+    }
+
+    #colorpicker .graph {
+      background-color: #0f0;
+      height: 150px;
+      width: 150px;
+      position: relative;
+    }
+
+    #colorpicker .graph .thumb {
+      width: 13px;
+      height: 13px;
+      border: 1px solid #000;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      border-radius: 7px;
+      z-index: 3;
+    }
+
+    #colorpicker .colorpicker-hue {
+      width: 20px;
+      height: 150px;
+      float: left;
+      margin-left: 13px;
+    }
+
+    #colorpicker .hue {
+      background-image: url(../img/hue.png);
+      width: 20px;
+      height: 150px;
+      position: relative;
+    }
+
+    #colorpicker .hue .thumb {
+      height: 10px;
+      width: 20px;
+      border-width: 1px 0;
+      position: absolute;
+      top: 20px;
+      z-index: 3;
+    }
+
+    #colorpicker .hue .thumb:before {
+      display: block;
+      width: 7px;
+      height: 10px;
+      background: url(../img/arrow-right.png) no-repeat;
+      position: absolute;
+      left: -7px;
+      content: "";
+    }
+
+    #colorpicker .hue .thumb:after {
+      display: block;
+      width: 7px;
+      height: 10px;
+      background: url(../img/arrow-left.png) no-repeat;
+      position: absolute;
+      right: -7px;
+      content: "";
+    }
+
+    #colorpicker .mask {
+      background: url(../img/mask.png) no-repeat;
+      width: 150px;
+      height: 150px;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 2;
+    }
+
+    .round {
+      border-radius: 7px;
+    }
+
+    .round-t {
+      border-radius: 7px 7px 0 0;
+    }
+
+    .round-r {
+      border-radius: 0 7px 7px 0;
+    }
+
+    .round-b {
+      border-radius: 0 0 7px 7px;
+    }
+
+    .round-l {
+      border-radius: 7px 0 0 7px;
+    }
+
+    .round-tl {
+      border-radius: 7px 0 0 0;
+    }
+
+    .round-tr {
+      border-radius: 0 7px 0 0;
+    }
+
+    .round-br {
+      border-radius: 0 0 7px 0;
+    }
+
+    .round-bl {
+      border-radius: 0 0 0 7px;
+    }
+
+    .clearfix {
+      *zoom: 1;
+    }
+    .clearfix:before,
+    .clearfix:after {
+      display: table;
+      content: "";
+    }
+    .clearfix:after {
+      clear: both;
+    }
+
+    .number {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translateX(-50%) translateY(-50%);
+      -moz-transform: translateX(-50%) translateY(-50%);
+      transform: translateX(-50%) translateY(-50%);
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="number round">
+    <div class="buttons">
+      <div class="up-button round-tl grey small button">▴</div>
+      <div class="down-button round-bl grey small button">▾</div>
+    </div>
+    <input type="text" value="0" class="numeric-input">
+    <input type="text" class="round-r unit" value="px">
+  </div>
+
+</body>
+<script type="text/javascript">
+  var numeric = new WebPro.Widget.NumericInput( ".number", {
+    buttonWrapperClassName: "buttons",
+    upButtonClassName: "up-button",
+    downButtonClassName: "down-button",
+    inputClassName: "numeric-input"
+  });
+</script>
+</html>
